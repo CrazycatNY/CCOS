@@ -18,6 +18,7 @@ set softtabstop=4
 set number
 "set cursorline
 "set textwidth=80
+set scrolloff=5
 set ruler
 
 set showmatch
