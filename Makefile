@@ -9,6 +9,8 @@ CC = gcc
 LD = ld
 ASM = nasm
 
+KERNEL = CC_kernel
+
 C_FLAGS = -c -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector -I include
 LD_FLAGS = -T scripts/kernel.ld -m elf_i386 -nostdlib
 ASM_FLAGS = -f elf -g -F stabs
@@ -25,30 +27,34 @@ all: $(S_OBJECTS) $(C_OBJECTS) link update_image
 
 link:
 	@echo 链接内核文件...
-	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o hx_kernel
+	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o $(KERNEL) 
 
 .PHONY:clean
 clean:
-	$(RM) $(S_OBJECTS) $(C_OBJECTS) hx_kernel
+	$(RM) $(S_OBJECTS) $(C_OBJECTS) $(KERNEL)
 
 .PHONY:update_image
 update_image:
-	sudo mount floppy.img /mnt.kernel
-	sudo cp hx_kernel /mnt/kernel/hx_kernel
+	sudo losetup /dev/loop21 CCOS.img -o 1048576
+	sudo mount /dev/loop21 /mnt/kernel
+	sudo cp $(KERNEL) /mnt/kernel/$(KERNEL)
 	sleep 1
+	sudo losetup -d /dev/loop21
 	sudo umount /mnt/kernel
 
 .PHONY:mount_image
 mount_image:
-	sudo mount floppy.img /mnt/kernel
+	sudo losetup /dev/loop21 CCOS.img -o 1048576
+	sudo mount /dev/loop21 /mnt/kernel
 
 .PHONY:umount_image
 umount_image:
+	sudo losetup -d /dev/loop21
 	sudo umount /mnt/kernel
 
 .PHONY:qemu
 qemu:
-	qemu -fda floppy.img -boot a
+	qemu -hda CCOS.img -boot a
 
 .PHONY: bochs
 bochs:
@@ -56,6 +62,6 @@ bochs:
 
 .PHONY:debug
 debug:
-	qemu -S -s -fda floppy.img -boot a &
+	qemu -S -s -hda floppy.img -boot a &
 	sleep 1
 	cgdb -x tools/gdbinit
