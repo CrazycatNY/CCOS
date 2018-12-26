@@ -1,8 +1,11 @@
-#include "types.h"
+#include "console.h"
 
 int kern_entry()
 {
-	unsigned char *input = (uint8_t *)0xB8000;
+	//console_clear();
+
+	//console_write_color("Hello, OS kernel!\n", rc_black, rc_green);
+	unsigned char *input = (unsigned char *)0xB8000;
 	unsigned char color = (0 << 4) | (15 & 0x0F);
 
 	*input++ = 'H'; *input++ = color;
