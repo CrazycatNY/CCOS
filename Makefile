@@ -35,7 +35,7 @@ clean:
 
 .PHONY:update_image
 update_image:
-	sudo losetup /dev/loop21 ccos.img -o 1048576
+	sudo losetup /dev/loop21 CCOS.img -o 1048576
 	sudo mount /dev/loop21 /mnt/kernel
 	sudo cp $(KERNEL) /mnt/kernel/$(KERNEL)
 	sleep 1
@@ -44,7 +44,7 @@ update_image:
 
 .PHONY:mount_image
 mount_image:
-	sudo losetup /dev/loop21 ccos.img -o 1048576
+	sudo losetup /dev/loop21 CCOS.img -o 1048576
 	sudo mount /dev/loop21 /mnt/kernel
 
 .PHONY:umount_image
@@ -54,7 +54,7 @@ umount_image:
 
 .PHONY:qemu
 qemu:
-	qemu -hda ccos.img -boot a
+	qemu -hda CCOS.img -boot a
 
 .PHONY: bochs
 bochs:
@@ -62,6 +62,6 @@ bochs:
 
 .PHONY:debug
 debug:
-	qemu -S -s -hda ccos.img -boot a &
+	qemu -S -s -hda CCOS.img -boot a &
 	sleep 1
 	cgdb -x tools/gdbinit

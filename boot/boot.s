@@ -51,7 +51,7 @@ start:
 	mov esp, STACK_TOP	;设置内核栈地址
 	and ebp, 0			;栈指针修改为0
 	and esp, 0FFFFFFF0H ;栈地址按16字节对齐
-	mov [glb_mboot_ptr], eax	;将ebx中的值存入全局变量
+	mov [glb_mboot_ptr], ebx	;将ebx中的值存入全局变量
 	call kern_entry		;调用内核入口函数
 stop:
 	hlt					;停机指令，降低cpu功耗

@@ -11,8 +11,7 @@ SECTIONS
 	. = 0x100000;
 	.text :
 	{
-		*(.data)
-		*(.rodata)
+		*(.text)
 		. = ALIGN(4096);
 	}
 
