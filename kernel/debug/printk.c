@@ -59,6 +59,7 @@ void printk_color(real_color_t back, real_color_t fore, const char *format, ...)
 	console_write_color(buff, back, fore);
 }
 
+#define is_digit(c)	((c) >= '0' && (c) <= '9')
 static int skip_atoi(const char **s)
 {
 	int i = 0;
@@ -92,7 +93,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
 
 	if(type & SMALL)
 	{
-		digits = "0123456789abcdefghijklmnopqrstuvwxyz"
+		digits = "0123456789abcdefghijklmnopqrstuvwxyz";
 	}
 	if(type & LEFT)
 	{
@@ -187,6 +188,7 @@ static char *number(char *str, int num, int base, int size, int precision, int t
 	{
 		*str++ = ' ';	
 	}
+	return str;
 }
 
 static int vsprintf(char *buff, const char *format, va_list args)
@@ -319,7 +321,7 @@ repeat:
 				break;
 			case 'o':
 				str = number(str, va_arg(args, unsigned long), 8,
-						field_width, precidion, flags);
+						field_width, precision, flags);
 				break;
 			case 'p':
 				if(field_width == -1)
@@ -372,14 +374,6 @@ repeat:
 
 	return (str - buff);
 }
-
-
-
-
-
-
-
-
 
 
 

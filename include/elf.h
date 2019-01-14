@@ -40,6 +40,16 @@ typedef struct elf_section_header_t{
 
 /* ELF 格式符号 */
 typedef struct elf_symbol_t{
+	unsigned int name;
+	unsigned int value;
+	unsigned int size;
+	unsigned int info;
+	unsigned int other;
+	unsigned short shndx;
+}__attribute__((packed))elf_symbol_t;
+
+/* ELF信息 */
+typedef struct elf_t{
 	elf_symbol_t *symtab;
 	unsigned int symtabsz;
 	const char *strtab;

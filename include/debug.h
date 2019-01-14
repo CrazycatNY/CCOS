@@ -48,7 +48,7 @@ void print_cur_status(void);
 void printk(const char *format, ...);
 
 /* 内核带颜色打印 */
-void print_color(real_color_t back, real_color_t fore, const char *format, ...);
+void printk_color(real_color_t back, real_color_t fore, const char *format, ...);
 
 #endif
 

@@ -53,7 +53,7 @@ void print_cur_status()
 void panic(const char *msg)
 {
 	printk("*** System panic: %s\n", msg);
-	printk_stack_trace();
+	print_stack_trace();
 	printk("***\n");
 
 	/* 致命错误发生后打印栈信息后停止在这里 */

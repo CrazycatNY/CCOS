@@ -1,10 +1,17 @@
 #include "console.h"
+#include "debug.h"
 
 int kern_entry()
 {
+	init_debug();
+
 	console_clear();
 
-	console_write_color("Hello, OS kernel!\n", rc_black, rc_green);
+	printk_color(rc_black, rc_green, "Hello, OS kernel!\n");
+
+	panic("test");
+
+	//console_write_color("Hello, OS kernel!\n", rc_black, rc_green);
 	//unsigned char *input = (unsigned char *)0xB8000;
 	//unsigned char color = (0 << 4) | (15 & 0x0F);
 
