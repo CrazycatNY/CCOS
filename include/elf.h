@@ -43,8 +43,8 @@ typedef struct elf_symbol_t{
 	unsigned int name;
 	unsigned int value;
 	unsigned int size;
-	unsigned int info;
-	unsigned int other;
+	unsigned char info;
+	unsigned char other;
 	unsigned short shndx;
 }__attribute__((packed))elf_symbol_t;
 
