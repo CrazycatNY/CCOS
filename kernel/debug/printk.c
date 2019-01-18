@@ -146,6 +146,8 @@ static char *number(char *str, int num, int base, int size, int precision, int t
 	{
 		precision = i;	
 	}
+	size -= precision;
+
 	if(!(type&(ZEROPAD+LEFT)))
 	{
 		while(size-- > 0)	
@@ -334,7 +336,6 @@ repeat:
 				break;
 			case 'x':
 				flags |= SMALL;
-				break;
 			case 'X':
 				str = number(str, va_arg(args, unsigned long), 16,
 						field_width, precision, flags);

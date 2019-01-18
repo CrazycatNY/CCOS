@@ -48,6 +48,7 @@ void print_cur_status()
 	printk("%d:  ds = %x\n", round, reg2);
 	printk("%d:  es = %x\n", round, reg3);
 	printk("%d:  ss = %x\n", round, reg4);
+	++round;
 }
 
 void panic(const char *msg)

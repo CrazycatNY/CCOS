@@ -64,4 +64,4 @@ bochs:
 debug:
 	qemu -S -s -hda CCOS.img -boot a &
 	sleep 1
-	cgdb -x tools/gdbinit
+	cgdb -x scripts/gdbinit
