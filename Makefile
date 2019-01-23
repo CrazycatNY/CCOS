@@ -9,6 +9,7 @@ CC = gcc
 LD = ld
 ASM = nasm
 
+
 KERNEL = CC_kernel
 
 C_FLAGS = -c -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector -I include
