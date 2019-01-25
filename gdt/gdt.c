@@ -63,12 +63,12 @@ static void gdt_set_gate(int num, unsigned int base, unsigned int limit, unsigne
 {
 	gdt_entries[num].base_low = (base & 0xFFFF);
 	gdt_entries[num].base_middle = (base >> 16) & 0xFF;
-	gdt_entries[num].base_low = (base >> 24) & 0xFF;
+	gdt_entries[num].base_high = (base >> 24) & 0xFF;
 			
 	gdt_entries[num].limit_low = (limit & 0xFFFF);
 	gdt_entries[num].granularity = (limit >> 16) & 0x0F;
 
-	gdt_entries[num].granularity |= (gran & 0x0F);
+	gdt_entries[num].granularity |= (gran & 0xF0);
 	gdt_entries[num].access = access;
 }
 
@@ -86,8 +86,8 @@ void init_gdt()
 	gdt_set_gate(0, 0, 0, 0, 0);	//按照Intel文档要求，第一个描述符必须全0
 	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); //指令段
 	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); //数据段
-	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); //用户模式代码段
-	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); //用户模式数据段
+	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); //用户模式代码段
+	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); //用户模式数据段
 
 	/*
 		加载全局描述符表地址到gdtr寄存器

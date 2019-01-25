@@ -132,7 +132,7 @@ void isr_handler(pt_regs *regs)
 	}
 	else
 	{
-		printk_color(rc_black, rc_blue, "Unhandled interrupt:%d\n", regs->int_no);
+		printk_color(rc_black, rc_white, "Unhandled interrupt:%d\n", regs->int_no);
 	}
 }
 

@@ -44,7 +44,7 @@ ISR_NOERRCODE	5  	; #BR 对数组的引用超出边界
 ISR_NOERRCODE	6  	; #UD 无效或未定义的操作码
 ISR_NOERRCODE	7  	; #NM 设备不可用(无数学协处理器)
 ISR_ERRCODE		8	; #DF 双重故障(有错误代码)
-ISR_ERRCODE		9  	; 协处理器跨段操作
+ISR_NOERRCODE		9  	; 协处理器跨段操作
 ISR_ERRCODE		10 	; #TS 无效TSS(有错误代码)
 ISR_ERRCODE		11 	; #NP 段不存在(有错误代码)
 ISR_ERRCODE		12 	; #SS 栈错误(有错误代码)
@@ -89,11 +89,11 @@ isr_common_stub:
 	mov gs, ax
 	mov ss, ax
 
-	push ebp		;此时的esp寄存器的值等价于pt_regs结构体的指针
+	push esp		;此时的esp寄存器的值等价于pt_regs结构体的指针
 	call isr_handler;在c代码里
 	add esp, 4		;清除压入的参数
+	
 	pop ebx			;恢复原来的数据段描述符
-
 	mov ds, bx
 	mov es, bx
 	mov fs, bx

@@ -1,5 +1,7 @@
 #include "console.h"
 #include "debug.h"
+#include "gdt.h"
+#include "idt.h"
 
 int kern_entry()
 {
@@ -13,7 +15,7 @@ int kern_entry()
 
 	printk_color(rc_black, rc_green, "Hello, OS kernel!\n");
 
-	panic("test");
+	//panic("test");
 
 	asm volatile ("int $0x3");
 	asm volatile ("int $0x4");
