@@ -73,8 +73,7 @@ stop:
 ;-----------------------------------------------------------------------------
 
 section .init.data				;开启分页前临时的数据段
-stack:	
-	times 1024 db 0				;临时内核栈
+stack:	times 1024 db 0				;临时内核栈
 STACK_TOP equ $-stack-1			;内核栈顶
 
 mboot_ptr_tmp: dd 0				;全局的Multiboot结构体指针

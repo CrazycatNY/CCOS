@@ -30,7 +30,7 @@ pgd_t pgd_kern[PGD_SIZE] __attribute__((aligned(PAGE_SIZE)));
 /*
 	内核页表区域
  */
-static pte_t pte_kern[PRE_COUNT][PTE_SIZE] __attribute__((aligned(PAGE_SIZE)));
+static pte_t pte_kern[PTE_COUNT][PTE_SIZE] __attribute__((aligned(PAGE_SIZE)));
 
 void init_vmm()
 {
@@ -81,7 +81,7 @@ void map(pgd_t *pgd_now, unsigned int va, unsigned int pa, unsigned int flags)
 	pte_t *pte = (pte_t *)(pgd_now[pgd_idx] & PAGE_MASK);
 	if(!pte)
 	{
-		pte = (pte *)pmm_alloc_page();
+		pte = (pte_t *)pmm_alloc_page();
 		pgd_now[pgd_idx] = (unsigned int)pte | PAGE_PRESENT | PAGE_WRITE;
 
 		/*
@@ -105,7 +105,56 @@ void map(pgd_t *pgd_now, unsigned int va, unsigned int pa, unsigned int flags)
 	 */
 	asm volatile ("invlpg (%0)"::"a" (va));
 }
+void ummap(pgd_t *pgd_now, unsigned int va)
+{
+	unsigned int pgd_idx = PGD_INDEX(va);
+	unsigned int pte_idx = PTE_INDEX(va);
 
+	pte_t *pte = (pte_t *)(pgd_now[pgd_idx] & PAGE_MASK);
+
+	if(!pte)
+	{
+		return;
+	}
+
+	/*
+		转换到内核线性地址
+	 */
+	pte = (pte_t *)((unsigned int)pte + PAGE_OFFSET);
+	
+	pte[pte_idx] = 0;
+
+	asm volatile("invlpg (%0)" :: "a" (va));
+}
+
+unsigned int get_mapping(pgd_t *pgd_now, unsigned int va, unsigned int *pa)
+{
+	unsigned int pgd_idx = PGD_INDEX(va);
+	unsigned int pte_idx = PGD_INDEX(va);
+
+	pte_t *pte = (pte_t *)(pgd_now[pgd_idx] & PAGE_MASK);
+
+	if(!pte)
+	{
+		return 0;	
+	}
+
+	/*
+		转换到内核线性地址
+	 */
+	pte = (pte_t *)((unsigned int)pte + PAGE_OFFSET);
+
+	/*
+		如果地址有效且指针不为NULL则返回地址
+	 */
+	if(pte[pte_idx] != 0 && pa)
+	{
+		*pa = pte[pte_idx] & PAGE_MASK;
+		return 1;
+	}
+
+	return 0;
+}
 
 
 

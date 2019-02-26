@@ -18,6 +18,7 @@
 #include "common.h"
 #include "string.h"
 #include "elf.h"
+#include "vmm.h"
 
 /*
 	从multiboot_t结构体获取ELF信息
