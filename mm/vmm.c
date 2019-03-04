@@ -105,7 +105,7 @@ void map(pgd_t *pgd_now, unsigned int va, unsigned int pa, unsigned int flags)
 	 */
 	asm volatile ("invlpg (%0)"::"a" (va));
 }
-void ummap(pgd_t *pgd_now, unsigned int va)
+void unmap(pgd_t *pgd_now, unsigned int va)
 {
 	unsigned int pgd_idx = PGD_INDEX(va);
 	unsigned int pte_idx = PTE_INDEX(va);
