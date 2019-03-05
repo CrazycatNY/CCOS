@@ -124,9 +124,6 @@ void kern_init()
 	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
 	pmm_free_page(alloc_addr);
 
-	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
-	pmm_free_page(alloc_addr);
-
 	alloc_addr = pmm_alloc_page();
 	printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
 

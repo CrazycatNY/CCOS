@@ -136,7 +136,7 @@ static void glue_chunk(header_t *cur_header)
 		cur_header = cur_header->prev;
 	}
 
-	if((cur_header->next != NULL) && (cur_header->next->next == 0))
+	if((cur_header->next != NULL) && (cur_header->next->allocated == 0))
 	{
 		cur_header->len += cur_header->next->len;
 
@@ -178,6 +178,8 @@ void test_heap()
 	void *addr5 = kmalloc(60);
 	printk("kmalloc 60 byte in 0x%X\n", addr5);
 	
+	printk("free mem in 0x%X\n", addr5);
+	kfree(addr5);
 	printk("free mem in 0x%X\n", addr3);
 	kfree(addr3);
 	printk("free mem in 0x%X\n", addr4);
