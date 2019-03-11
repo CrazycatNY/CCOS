@@ -1,10 +1,11 @@
-#include "console.h"
 #include "common.h"
+#include "console.h"
+#include "vmm.h"
 
 /* 
 	VGA 显示缓冲的起点是 0xB8000
  */
-static unsigned short *video_memory = (unsigned short *)0xB8000;
+static unsigned short *video_memory = (unsigned short *)(0xB8000 + PAGE_OFFSET);
 
 /*
 	光标的横纵坐标

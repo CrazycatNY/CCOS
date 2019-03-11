@@ -30,3 +30,21 @@ inline unsigned short inw(unsigned short port)
 
 	return ret;
 }
+
+/*
+	开启中断
+ */
+//inline void enable_intr()
+//{
+//	asm volatile("sti");
+//}
+//
+///*
+//	断开中断
+// */
+//inline void disable_intr()
+//{
+//	asm volatile("cli" ::: "memory");
+//}
+
+

@@ -16,6 +16,10 @@ unsigned char inb(unsigned short port);
  */
 unsigned short inw(unsigned short port);
 
+//inline void enable_intr();
+
+//inline void disable_intr();
+
 #endif //__INCLUDE_COMMON_H
 
 
