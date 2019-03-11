@@ -20,12 +20,14 @@
 #include "debug.h"
 #include "common.h"
 #include "idt.h"
+#include "sched.h"
 
 
 void timer_callback(pt_regs *regs)
 {
-	static unsigned int tick = 0;
-	printk_color(rc_black, rc_red, "Tick: %d\n", tick++);
+	//static unsigned int tick = 0;
+	//printk_color(rc_black, rc_red, "Tick: %d\n", tick++);
+	schedule();
 }
 
 void init_timer(unsigned int frequency)

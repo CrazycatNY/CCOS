@@ -1,5 +1,5 @@
-#include "console.h"
 #include "common.h"
+#include "console.h"
 #include "vmm.h"
 
 /* 

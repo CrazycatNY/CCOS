@@ -1,3 +1,4 @@
+#include "common.h"
 #include "console.h"
 #include "debug.h"
 #include "gdt.h"
@@ -6,6 +7,8 @@
 #include "pmm.h"
 #include "vmm.h"
 #include "heap.h"
+#include "task.h"
+#include "sched.h"
 
 /*
 	内核初始化函数
@@ -21,6 +24,8 @@ multiboot_t *glb_mboot_ptr;
 	开启分页之后的内核栈
  */
 char kern_stack[STACK_SIZE];
+
+unsigned int kern_stack_top;
 
 /*
 	内核使用的临时页表和页目录
@@ -72,7 +77,7 @@ __attribute__((section(".init.text"))) void kern_entry()
 	/*
 		切换内核栈
 	 */
-	unsigned int kern_stack_top = ((unsigned int)kern_stack + STACK_SIZE) & 0xFFFFFFF0;
+	kern_stack_top = ((unsigned int)kern_stack + STACK_SIZE) & 0xFFFFFFF0;
 	asm volatile ("mov %0, %%esp\n\t"
 					"xor %%ebp, %%ebp"::"r"(kern_stack_top));
 
@@ -87,6 +92,20 @@ __attribute__((section(".init.text"))) void kern_entry()
 	kern_init();
 }
 
+int flag = 0;
+
+int thread(void *arg)
+{
+	while(1)
+	{
+		if(flag == 1)
+		{
+			printk_color(rc_black, rc_green, "B");
+			flag = 0;
+		}
+	}
+	return 0;
+}
 void kern_init()
 {
 	init_debug();
@@ -101,7 +120,6 @@ void kern_init()
 
 	init_timer(200);
 
-	//	asm volatile ("sti");
 
 	printk("kernel in memory start: 0x%08X\n", kern_start);
 	printk("kernel in memory end:	0x%08X\n", kern_end);
@@ -113,34 +131,34 @@ void kern_init()
 	init_vmm();
 	init_heap();
 	
-	printk_color(rc_black, rc_red, "\nThe Count of Physical Memory Page is: %u\n\n", phy_page_count);
+	//printk_color(rc_black, rc_red, "\nThe Count of Physical Memory Page is: %u\n\n", phy_page_count);
 
-	unsigned int alloc_addr = NULL;
-	printk_color(rc_black, rc_light_brown, "Test Physical Memory Alloc:\n");
+	//unsigned int alloc_addr = NULL;
+	//printk_color(rc_black, rc_light_brown, "Test Physical Memory Alloc:\n");
 
-	alloc_addr = pmm_alloc_page();
-	printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
+	//alloc_addr = pmm_alloc_page();
+	//printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
 
-	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
-	pmm_free_page(alloc_addr);
+	//printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
+	//pmm_free_page(alloc_addr);
 
-	alloc_addr = pmm_alloc_page();
-	printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
+	//alloc_addr = pmm_alloc_page();
+	//printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
 
-	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
-	pmm_free_page(alloc_addr);
+	//printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
+	//pmm_free_page(alloc_addr);
 
-	alloc_addr = pmm_alloc_page();
-	printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
+	//alloc_addr = pmm_alloc_page();
+	//printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
 
-	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
-	pmm_free_page(alloc_addr);
+	//printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
+	//pmm_free_page(alloc_addr);
 
-	alloc_addr = pmm_alloc_page();
-	printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
-	
-	printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
-	pmm_free_page(alloc_addr);
+	//alloc_addr = pmm_alloc_page();
+	//printk_color(rc_black, rc_light_brown, "Alloc Physical Addr: 0x%08X\n", alloc_addr);
+	//
+	//printk_color(rc_black, rc_light_brown, "Free 0x%0X\n", alloc_addr);
+	//pmm_free_page(alloc_addr);
 
 	test_heap();
 	//panic("test");
@@ -165,6 +183,22 @@ void kern_init()
 	//*input++ = 'e'; *input++ = color;
 	//*input++ = 'l'; *input++ = color;
 	//*input++ = '!'; *input++ = color;
+	init_sched();
+
+	kernel_thread(thread, NULL);
+
+	//enable_intr();
+	asm volatile ("sti");
+	
+	while(1)
+	{
+		if(flag == 0)
+		{
+			printk_color(rc_black, rc_red, "A");
+			flag = 1;
+		}
+	}
+	
 	while(1)
 	{
 		asm volatile("hlt");

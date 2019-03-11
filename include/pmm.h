@@ -58,6 +58,8 @@ extern unsigned char kern_end[];
  */
 extern unsigned int phy_page_count;
 
+extern unsigned int kern_stack_top;
+
 /* 输出bios提供的物理内存布局 */
 void show_memory_map();
 
